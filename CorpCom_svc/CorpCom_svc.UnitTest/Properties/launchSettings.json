@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "DemoPOS.UnitTest": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Test"
+      }
+    }
+  }
+}
