@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Net60_ApiTemplate_2023.Configurations;
+using CorpCom_svc.Configurations;
 using Quartz;
 using System.Text.RegularExpressions;
 
@@ -7,7 +7,6 @@ namespace CorpCom_svc.UnitTest.Configurations
 {
     public class QuartzSettingTest
     {
-
         private IConfiguration _configuration;
 
         [SetUp]
@@ -50,7 +49,6 @@ namespace CorpCom_svc.UnitTest.Configurations
 
         private static bool IsValidSchedule(string schedule)
         {
-
             var valid = CronExpression.IsValidExpression(schedule);
             // Some expressions are parsed as valid by the above method but they are not valid, like "* * * ? * *&54".
             //In order to avoid such invalid expressions an additional check is required, that is done using the below regex.

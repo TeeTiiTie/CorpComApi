@@ -21,16 +21,16 @@ namespace CorpCom_svc.Services.CorpCom
         private readonly AppDBContext _context;
         private readonly IMapper _mapper;
 
-        //private readonly ILoginDetailServices _login;
+        private readonly ILoginDetailServices _login;
         private readonly IOptions<PathBannerSetting> _optionsPathBanner;
 
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public CorpComServices(AppDBContext context, IMapper mapper, IOptions<PathBannerSetting> optionsPathBanner, IHttpContextAccessor httpContextAccessor) //ILoginDetailServices login
+        public CorpComServices(AppDBContext context, IMapper mapper, IOptions<PathBannerSetting> optionsPathBanner, IHttpContextAccessor httpContextAccessor, ILoginDetailServices login)
         {
             _context = context;
             _mapper = mapper;
-            //_login = login;
+            _login = login;
             _optionsPathBanner = optionsPathBanner;
             _httpContextAccessor = httpContextAccessor;
         }
@@ -40,7 +40,7 @@ namespace CorpCom_svc.Services.CorpCom
             try
             {
                 DateTime now = DateTime.Now;
-                //var claim = _login.GetClaim();
+                var claim = _login.GetClaim();
 
                 string folder = _optionsPathBanner.Value.StaticPath;
                 var extension = Path.GetExtension(input.File.FileName);
@@ -67,7 +67,7 @@ namespace CorpCom_svc.Services.CorpCom
                     update.IsPublish = input.IsPublish;
                     update.Remark = input.Remark;
                     update.UpdatedDate = now;
-                    update.UpdatedByUserId = 1; //claim.UserId;
+                    update.UpdatedByUserId = claim.UserId;
                     _context.Update(update);
 
                     resp.Method = "Update";
@@ -78,9 +78,9 @@ namespace CorpCom_svc.Services.CorpCom
                     insert.PhysicalPath = folder;
                     insert.ImageName = fileName;
                     insert.ImageUrl = currentUrl;
-                    insert.CreatedByUserId = 1; //claim.UserId;
+                    insert.CreatedByUserId = claim.UserId;
                     insert.CreatedDate = now;
-                    insert.UpdatedByUserId = 1; //claim.UserId;
+                    insert.UpdatedByUserId = claim.UserId;
                     insert.UpdatedDate = now;
                     _context.Add(insert);
 
@@ -124,7 +124,7 @@ namespace CorpCom_svc.Services.CorpCom
             try
             {
                 DateTime now = DateTime.Now;
-                //var claim = _login.GetClaim();
+                var claim = _login.GetClaim();
 
                 var qry = _context.Positions.Where(x => x.IsActive == true);
 
@@ -145,16 +145,16 @@ namespace CorpCom_svc.Services.CorpCom
                     select.Width = input.Width;
                     select.Height = input.Height;
                     select.UpdatedDate = now;
-                    select.UpdatedByUserId = 1; // claim.UserId;
+                    select.UpdatedByUserId = claim.UserId;
                     _context.Update(select);
                 }
                 else
                 {
                     var insert = _mapper.Map<Position>(input);
                     insert.CreatedDate = now;
-                    insert.CreatedByUserId = 1; // claim.UserId;
+                    insert.CreatedByUserId = claim.UserId;
                     insert.UpdatedDate = now;
-                    insert.UpdatedByUserId = 1; //claim.UserId;
+                    insert.UpdatedByUserId = claim.UserId;
                     _context.Add(insert);
                 }
 

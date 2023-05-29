@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Moq;
-using Net60_ApiTemplate_2023.Attributes;
+using CorpCom_svc.Attributes;
 
 namespace CorpCom_svc.UnitTest.Attributes.Validation
 {

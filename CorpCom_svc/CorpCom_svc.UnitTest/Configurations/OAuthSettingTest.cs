@@ -1,11 +1,10 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Net60_ApiTemplate_2023.Configurations;
+using CorpCom_svc.Configurations;
 
 namespace CorpCom_svc.UnitTest.Configurations
 {
     public class OAuthSettingTest
     {
-
         private IConfiguration _configuration;
 
         [SetUp]

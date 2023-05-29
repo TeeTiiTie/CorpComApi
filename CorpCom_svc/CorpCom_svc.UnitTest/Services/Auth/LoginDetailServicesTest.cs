@@ -1,4 +1,4 @@
-﻿using Net60_ApiTemplate_2023.Services.Auth;
+﻿using CorpCom_svc.Services.Auth;
 
 namespace CorpCom_svc.UnitTest.Services.Auth
 {
@@ -11,7 +11,6 @@ namespace CorpCom_svc.UnitTest.Services.Auth
         public LoginDetailServicesTest()
         {
         }
-
 
         [Test]
         public void GetClaimTest()
@@ -132,6 +131,5 @@ namespace CorpCom_svc.UnitTest.Services.Auth
             // Assert
             Assert.That(claim, Is.EqualTo(expect));
         }
-
     }
 }

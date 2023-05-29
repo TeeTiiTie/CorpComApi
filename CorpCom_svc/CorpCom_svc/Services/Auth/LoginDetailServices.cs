@@ -1,4 +1,5 @@
 ﻿using CorpCom_svc.DTOs.Auth;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace CorpCom_svc.Services.Auth
@@ -10,8 +11,16 @@ namespace CorpCom_svc.Services.Auth
             if (accessor.HttpContext == null) throw new ArgumentNullException(nameof(accessor.HttpContext));
 
             _httpContext = accessor.HttpContext;
-            _token = _httpContext.Request.Headers["Authorization"].ToString()[7..];
-            _jwtToken = new JwtSecurityTokenHandler().ReadJwtToken(_token);
+            if (_httpContext.Request.Headers.Authorization.IsNullOrEmpty())
+            {
+                _token = string.Empty;
+                _jwtToken = new JwtSecurityToken();
+            }
+            else
+            {
+                _token = _httpContext.Request.Headers["Authorization"].ToString()[7..];
+                _jwtToken = new JwtSecurityTokenHandler().ReadJwtToken(_token);
+            }
         }
 
         public LoginDetailServices(string token)

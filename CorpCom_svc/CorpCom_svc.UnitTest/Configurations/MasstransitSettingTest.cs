@@ -1,11 +1,10 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Net60_ApiTemplate_2023.Configurations;
+using CorpCom_svc.Configurations;
 
 namespace CorpCom_svc.UnitTest.Configurations
 {
     public class MasstransitSettingTest
     {
-
         private IConfiguration _configuration;
 
         [SetUp]
@@ -64,7 +63,6 @@ namespace CorpCom_svc.UnitTest.Configurations
             // RabbitMQSetting.Vhost must not be null or empty
             Assert.That(rabbitMQSetting.Vhost, Is.Not.Null);
             Assert.That(rabbitMQSetting.Vhost, Is.Not.Empty);
-
         }
 
         /// <summary>
@@ -73,7 +71,6 @@ namespace CorpCom_svc.UnitTest.Configurations
         [Test]
         public void KafkaSetting_TryPassingConfiguration()
         {
-
             // Arrange
             var json = _configuration.GetSection("Masstransit");
             if (json is null) Assert.Fail("Masstransit is not setted in appsetting.json");
@@ -105,7 +102,6 @@ namespace CorpCom_svc.UnitTest.Configurations
             // KafkaSetting.Port must not be empty and greater than 0
             Assert.That(kafkaSetting.Port, Is.Not.Empty);
             Assert.That(kafkaSetting.Port, Is.GreaterThan(0));
-
         }
     }
 }

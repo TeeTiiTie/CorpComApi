@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Net60_ApiTemplate_2023.Configurations;
+using CorpCom_svc.Configurations;
 using Newtonsoft.Json;
 
 namespace CorpCom_svc.UnitTest.Configurations
