@@ -39,12 +39,19 @@ namespace CorpComApi.Services.CorpCom
         {
             try
             {
+                // check file name extension
+                var extension = Path.GetExtension(input.File.FileName);
+                if (extension != ".jpg" && extension != ".png")
+                    return ResponseResult.Failure<SaveFileResponseDto>("Invalid file name extension.");
+
                 DateTime now = DateTime.Now;
                 var claim = _login.GetClaim();
 
+                // value path from app setting
                 string folder = _optionsPathBanner.Value.StaticPath;
-                var extension = Path.GetExtension(input.File.FileName);
                 var fileName = $"{Guid.NewGuid()}{extension}";
+
+                // url of image
                 var currentUrl = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{_httpContextAccessor.HttpContext.Request.Host}{_optionsPathBanner.Value.RequestPath}/{fileName}";
 
                 var resp = new SaveFileResponseDto
@@ -61,7 +68,7 @@ namespace CorpComApi.Services.CorpCom
                     update.PhysicalPath = folder;
                     update.ImageName = fileName;
                     update.ImageUrl = currentUrl;
-                    update.LinkUrl = input.LinkUrl;
+                    update.LinkUrl = input.LinkUrl; // link url ที่ต้องการกดแล้วให้ไปที่ไหน
                     update.Priority = input.Priority;
                     update.PositionId = input.PositionId;
                     update.IsPublish = input.IsPublish;
@@ -106,7 +113,6 @@ namespace CorpComApi.Services.CorpCom
             {
                 await file.CopyToAsync(memoryStream);
                 var content = memoryStream.ToArray();
-                var fileSize = file.Length;
                 string folder = _optionsPathBanner.Value.StaticPath;
 
                 if (!Directory.Exists(folder))
@@ -128,12 +134,9 @@ namespace CorpComApi.Services.CorpCom
 
                 var qry = _context.Positions.Where(x => x.IsActive == true);
 
-                if (!string.IsNullOrWhiteSpace(input.PositionName))
+                if (qry.Any(x => x.PositionName == input.PositionName)) // check position name duplicate
                 {
-                    var checkName = qry.FirstOrDefault(x => x.PositionName == input.PositionName);
-
-                    if (checkName != null)
-                        return ResponseResult.Failure<string>("Position name is duplicate.");
+                    return ResponseResult.Failure<string>("Position name is duplicate.");
                 }
 
                 var select = await qry.FirstOrDefaultAsync(x => x.PositionId == input.PositionId);
@@ -173,6 +176,7 @@ namespace CorpComApi.Services.CorpCom
             try
             {
                 var qry = _context.Positions.Where(x => x.IsActive == true);
+
                 if (filter.PositionId != null)
                     qry.Where(x => x.PositionId == filter.PositionId);
 
@@ -192,6 +196,7 @@ namespace CorpComApi.Services.CorpCom
                         return ResponseResult.Failure<List<PositionsResponseDto>>($"Could not order by field: {filter.OrderingField}");
                     }
                 }
+
                 //Pagination
                 var paginationResult = await _httpContextAccessor.HttpContext.InsertPaginationParametersInResponse(qry, filter.RecordsPerPage, filter.Page);
                 var output = await qry.Paginate(filter).ToListAsync();
@@ -225,6 +230,7 @@ namespace CorpComApi.Services.CorpCom
                         return ResponseResult.Failure<List<BannersResponseDto>>($"Could not order by field: {filter.OrderingField}");
                     }
                 }
+
                 //Pagination
                 var paginationResult = await _httpContextAccessor.HttpContext.InsertPaginationParametersInResponse(qry, filter.RecordsPerPage, filter.Page);
                 var output = await qry.Paginate(filter).ToListAsync();
